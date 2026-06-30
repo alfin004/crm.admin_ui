@@ -1,13 +1,13 @@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import Select from "./Select";
 
-export default function Pagination({ page, totalPages, perPage, onPageChange, onPerPageChange, showingFrom, showingTo, total }) {
+export default function Pagination({ page, totalPages, perPage, onPageChange, onPerPageChange, showingFrom, showingTo, total, itemLabel = "users" }) {
   const startPage = Math.max(1, Math.min(page - 1, totalPages - 2));
   const pages = Array.from({ length: Math.min(3, totalPages) }, (_, index) => startPage + index);
 
   return (
     <div className="flex flex-col gap-4 border-t border-[#e1e7f2] px-6 py-4 text-sm text-[#44518b] lg:flex-row lg:items-center lg:justify-between">
-      <p className="font-medium">Showing {showingFrom} to {showingTo} of {total} users</p>
+      <p className="font-medium">Showing {showingFrom} to {showingTo} of {total} {itemLabel}</p>
       <div className="flex flex-wrap items-center gap-3">
         <Select
           value={perPage}
