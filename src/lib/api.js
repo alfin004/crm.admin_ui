@@ -2,6 +2,8 @@ import { clearStoredToken, getStoredToken } from "./authStorage";
 
 const rawBaseUrl = import.meta.env.VITE_BASE_URL || "http://localhost:8000";
 export const API_BASE_URL = rawBaseUrl.replace(/\/+$/, "");
+const rawDashboardBaseUrl = import.meta.env.VITE_DASHBOARD_API_BASE_URL || rawBaseUrl;
+export const DASHBOARD_API_BASE_URL = rawDashboardBaseUrl.replace(/\/+$/, "");
 
 let unauthorizedHandler = null;
 
@@ -10,10 +12,14 @@ export function setUnauthorizedHandler(handler) {
 }
 
 export async function apiRequest(path, options = {}) {
+  return request(API_BASE_URL, path, options);
+}
+
+async function request(baseUrl, path, options = {}) {
   const { auth = true, body, headers = {}, skipUnauthorizedRedirect = false, ...rest } = options;
   const token = getStoredToken();
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${baseUrl}${path}`, {
     ...rest,
     headers: {
       Accept: "application/json",
@@ -48,6 +54,10 @@ export async function apiRequest(path, options = {}) {
   return data;
 }
 
+export function dashboardRequest(path, options = {}) {
+  return request(DASHBOARD_API_BASE_URL, path, options);
+}
+
 export const authApi = {
   login: (credentials) =>
     apiRequest("/auth/login", {
@@ -79,6 +89,41 @@ export const usersApi = {
   update: (id, payload) => apiRequest(`/users/${id}`, { method: "PUT", body: payload }),
   delete: (id) => apiRequest(`/users/${id}`, { method: "DELETE" }),
   resetPassword: (id) => apiRequest(`/users/${id}/reset-password`, { method: "POST" }),
+};
+
+function query(params) {
+  const search = new URLSearchParams();
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") search.set(key, value);
+  });
+  const value = search.toString();
+  return value ? `?${value}` : "";
+}
+
+export const dashboardApi = {
+  customers: {
+    list: (params) => dashboardRequest(`/customers${query(params)}`),
+    get: (id) => dashboardRequest(`/customers/${id}`),
+    create: (payload) => dashboardRequest("/customers", { method: "POST", body: payload }),
+    update: (id, payload) => dashboardRequest(`/customers/${id}`, { method: "PUT", body: payload }),
+    delete: (id) => dashboardRequest(`/customers/${id}`, { method: "DELETE" }),
+    products: (id, params) => dashboardRequest(`/customers/${id}/products${query(params)}`),
+  },
+  products: {
+    list: (params) => dashboardRequest(`/products${query(params)}`),
+    get: (id) => dashboardRequest(`/products/${id}`),
+    create: (payload) => dashboardRequest("/products", { method: "POST", body: payload }),
+    update: (id, payload) => dashboardRequest(`/products/${id}`, { method: "PUT", body: payload }),
+    delete: (id) => dashboardRequest(`/products/${id}`, { method: "DELETE" }),
+    customers: (id, params) => dashboardRequest(`/products/${id}/customers${query(params)}`),
+    assignCustomer: (productId, customerId) => dashboardRequest(`/products/${productId}/customers/${customerId}`, { method: "POST" }),
+    unassignCustomer: (productId, customerId) => dashboardRequest(`/products/${productId}/customers/${customerId}`, { method: "DELETE" }),
+  },
+  followUps: {
+    list: (customerId, params) => dashboardRequest(`/customers/${customerId}/follow-ups${query(params)}`),
+    create: (customerId, payload) => dashboardRequest(`/customers/${customerId}/follow-ups`, { method: "POST", body: payload }),
+    report: (params) => dashboardRequest(`/reports/follow-ups${query(params)}`),
+  },
 };
 
 function parseJson(text) {

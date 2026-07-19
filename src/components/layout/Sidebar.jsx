@@ -14,11 +14,11 @@ import {
 import { Link, useLocation } from "react-router-dom";
 
 const navigation = [
-  { label: "Dashboard", icon: Home, path: "#" },
-  { label: "Customers", icon: Users, path: "#" },
-  { label: "Products", icon: Box, path: "#" },
-  { label: "Customer Product Mapping", icon: Phone, path: "#" },
-  { label: "Follow-Up Management", icon: ListChecks, path: "#" },
+  { label: "Dashboard", icon: Home, path: "/customers" },
+  { label: "Customers", icon: Users, path: "/customers" },
+  { label: "Products", icon: Box, path: "/products" },
+  { label: "Customer Product Mapping", icon: Phone, path: "/customer-product-mapping" },
+  { label: "Follow-Up Management", icon: ListChecks, path: "/follow-up-management" },
   { label: "Attendance", icon: CalendarDays, path: "/attendance" },
 ];
 
@@ -72,7 +72,7 @@ function SidebarSection({ title, items, currentPath, className = "" }) {
       <h2 className="mb-4 px-3 text-xs font-extrabold tracking-wide text-[#071154]">{title}</h2>
       <div className="space-y-1">
         {items.map(({ label, icon: Icon, path }) => {
-          const active = path !== "#" && currentPath === path;
+          const active = path !== "#" && currentPath === path && !(label === "Dashboard" && currentPath === "/customers");
           return (
             <Link
               to={path === "#" ? currentPath : path}

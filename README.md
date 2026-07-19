@@ -18,6 +18,5 @@ If `VITE_BASE_URL` is not set, the app defaults to `http://localhost:8000`.
 npm install
 npm install react-router-dom lucide-react @headlessui/react tailwindcss @tailwindcss/vite
 npm run dev
-```
 
 The app runs at the Vite local URL shown in the terminal, usually `http://localhost:5173/`.
