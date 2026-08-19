@@ -6,9 +6,11 @@ import Input from "../common/Input";
 import Modal from "../common/Modal";
 import { authApi } from "../../lib/api";
 import { useAuth } from "../../context/AuthContext";
+import { useLayout } from "../../context/LayoutContext";
 
 export default function Header() {
   const { currentUser, logout } = useAuth();
+  const { toggleNavigation } = useLayout();
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
   const [passwordForm, setPasswordForm] = useState({ password: "", confirmPassword: "" });
@@ -49,7 +51,7 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-[#dbe3f1] bg-white/95 px-5 backdrop-blur lg:ml-[292px] lg:px-8">
-        <button className="grid h-11 w-11 place-items-center rounded-md text-[#071154] hover:bg-[#eef4ff]" aria-label="Open navigation">
+        <button type="button" onClick={toggleNavigation} className="grid h-11 w-11 place-items-center rounded-md text-[#071154] hover:bg-[#eef4ff]" aria-label="Toggle navigation">
           <MenuIcon className="h-6 w-6" />
         </button>
         <div className="flex items-center gap-4">

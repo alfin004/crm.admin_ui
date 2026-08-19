@@ -124,6 +124,25 @@ export const dashboardApi = {
     create: (customerId, payload) => dashboardRequest(`/customers/${customerId}/follow-ups`, { method: "POST", body: payload }),
     report: (params) => dashboardRequest(`/reports/follow-ups${query(params)}`),
   },
+  staff: { dropdown: () => dashboardRequest("/staff/dropdown") },
+  reports: {
+    customers: (params) => dashboardRequest(`/reports/customers${query(params)}`),
+    products: (params) => dashboardRequest(`/reports/products${query(params)}`),
+    followUps: (params) => dashboardRequest(`/reports/follow-ups${query(params)}`),
+  },
+};
+
+export const reportsApi = {
+  customers: (params) => dashboardRequest(`/reports/customers${query(params)}`),
+  products: (params) => dashboardRequest(`/reports/products${query(params)}`),
+  followUps: (params) => dashboardRequest(`/reports/follow-ups${query(params)}`),
+  // Reports live with the dashboard API, so keep export on that authenticated origin.
+  export: async (path, params) => {
+    const token = getStoredToken();
+    const response = await fetch(`${DASHBOARD_API_BASE_URL}${path}${query(params)}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+    if (!response.ok) throw new Error((await response.json().catch(() => null))?.message || "Export failed");
+    return { blob: await response.blob(), contentDisposition: response.headers.get("content-disposition"), contentType: response.headers.get("content-type") };
+  },
 };
 
 function parseJson(text) {
