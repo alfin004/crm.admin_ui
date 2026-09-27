@@ -16,7 +16,7 @@ import { X } from "lucide-react";
 import { useLayout } from "../../context/LayoutContext";
 
 const navigation = [
-  { label: "Dashboard", icon: Home, path: "/customers" },
+  { label: "Dashboard", icon: Home, path: "/dashboard" },
   { label: "Customers", icon: Users, path: "/customers" },
   { label: "Products", icon: Box, path: "/products" },
   { label: "Customer Product Mapping", icon: Phone, path: "/customer-product-mapping" },
@@ -28,7 +28,7 @@ const reports = [
   { label: "Customer Reports", icon: FileText, path: "/reports/customers" },
   { label: "Product Reports", icon: Box, path: "/reports/products" },
   { label: "Follow-Up Reports", icon: Phone, path: "/reports/follow-ups" },
-  { label: "Attendance Reports", icon: CalendarDays, path: "#" },
+  { label: "Attendance Report", icon: CalendarDays, path: "/reports/attendance" },
 ];
 
 export default function Sidebar() {
@@ -80,7 +80,7 @@ function SidebarSection({ title, items, currentPath, className = "", onNavigate 
       <h2 className="mb-4 px-3 text-xs font-extrabold tracking-wide text-[#071154]">{title}</h2>
       <div className="space-y-1">
         {items.map(({ label, icon: Icon, path }) => {
-          const active = path !== "#" && currentPath === path && !(label === "Dashboard" && currentPath === "/customers");
+          const active = path !== "#" && currentPath === path;
           return (
             <Link
               to={path === "#" ? currentPath : path}

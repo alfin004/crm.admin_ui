@@ -48,7 +48,9 @@ async function request(baseUrl, path, options = {}) {
 
   if (!response.ok) {
     const message = data?.detail || data?.message || "Request failed";
-    throw new Error(Array.isArray(message) ? message.map((item) => item.msg || item.message || item).join(", ") : message);
+    const error = new Error(Array.isArray(message) ? message.map((item) => item.msg || item.message || item).join(", ") : message);
+    error.status = response.status;
+    throw error;
   }
 
   return data;
@@ -101,6 +103,8 @@ function query(params) {
 }
 
 export const dashboardApi = {
+  staffPerformance: (sortBy = "customer") =>
+    dashboardRequest(`/dashboard/staff-performance${query({ sort_by: sortBy })}`),
   customers: {
     list: (params) => dashboardRequest(`/customers${query(params)}`),
     get: (id) => dashboardRequest(`/customers/${id}`),

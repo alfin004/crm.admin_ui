@@ -12,4 +12,8 @@ export const attendanceApi = {
     params.set("page_size", pageSize);
     return apiRequest(`/attendance/history?${params.toString()}`);
   },
+  monthlyReport: ({ month, year }) => {
+    const params = new URLSearchParams({ month: String(Number(month)), year: String(Number(year)) });
+    return apiRequest(`/attendance/report/monthly?${params.toString()}`);
+  },
 };

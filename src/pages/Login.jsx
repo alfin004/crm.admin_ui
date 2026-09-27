@@ -19,7 +19,7 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(form);
-      navigate(location.state?.from?.pathname || "/users", { replace: true });
+      navigate(location.state?.from?.pathname || "/dashboard", { replace: true });
     } catch (err) {
       setError(err.message === "Unauthorized" ? "Invalid username or password." : err.message);
     } finally {

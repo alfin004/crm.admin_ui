@@ -5,16 +5,20 @@ import Login from "../pages/Login";
 import UserManagement from "../pages/UserManagement";
 import Masters from "../pages/Masters";
 import Reports from "../pages/Reports";
+import Dashboard from "../pages/Dashboard";
+import AttendanceReport from "../pages/AttendanceReport";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/customers" replace />} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="/login" element={<Login />} />
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<Navigate to="/customers" replace />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users" element={<UserManagement />} />
         <Route path="/attendance" element={<Attendance />} />
+        <Route path="/reports/attendance" element={<AttendanceReport />} />
         <Route path="/customers" element={<Masters type="customers" />} />
         <Route path="/products" element={<Masters type="products" />} />
         <Route path="/customer-product-mapping" element={<Masters type="mapping" />} />
